@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import '../../assets/css/login.css';
+import '../../../assets/css/login.css';
 import 'https://kit.fontawesome.com/b8ffcf0824.js';
-import logo from '../../assets/images/logo.png';
+import logo from '../../../assets/images/logo.png';
 
 const Login: React.FC = () => {
   const [isRightPanelActive, setIsRightPanelActive] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const history = useHistory();
+
+  const adminEmail = "Linhtranne@gmail.com";
+  const adminPassword = "hihihihi";
 
   const handleSignUpClick = () => {
     setIsRightPanelActive(true);
@@ -18,17 +19,15 @@ const Login: React.FC = () => {
     setIsRightPanelActive(false);
   };
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    const hardcodedEmail = 'linhtranne@gmail.com';
-    const hardcodedPassword = 'hihihihi';
-
-    if (email === hardcodedEmail && password === hardcodedPassword) {
-      history.push('../../Admin/Admin');
+  const handleLogin = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (email === adminEmail && password === adminPassword) {
+      window.location.href = '/admin';
     } else {
-      alert('Invalid credentials');
+      alert("Invalid email or password");
     }
   };
+
   return (
     <div className={`container ${isRightPanelActive ? 'right-panel-active' : ''}`} id="container">
       <div className="form-container sign-up-container">
@@ -47,7 +46,7 @@ const Login: React.FC = () => {
         </form>
       </div>
       <div className="form-container sign-in-container">
-        <form action="#">
+        <form onSubmit={handleLogin}>
           <h1>Đăng Nhập</h1>
           <div className="social-container">
             <a href="#" className="social"><i className="fab fa-facebook-f"></i></a>
@@ -55,10 +54,10 @@ const Login: React.FC = () => {
             <a href="#" className="social"><i className="fab fa-linkedin-in"></i></a>
           </div>
           <span>Đăng nhập bằng tài khoản của bạn</span>
-          <input type="email" placeholder="Email" />
-          <input type="password" placeholder="Password" />
+          <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
           <a href="#">Quên Mật Khẩu?</a>
-          <button>Đăng Nhập</button>
+          <button type="submit">Đăng Nhập</button>
         </form>
       </div>
       <div className="overlay-container">
@@ -80,3 +79,4 @@ const Login: React.FC = () => {
 };
 
 export default Login;
+
