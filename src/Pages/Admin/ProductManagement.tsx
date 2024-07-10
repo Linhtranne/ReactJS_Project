@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProducts, addProduct, updateProduct, deleteProduct, setSearchQuery, setPage, setFilterBy, selectProducts } from '../../../features/products/productsSlice';
 
 const ProductManagement: React.FC = () => {
   const dispatch = useDispatch();
   const { products, status, searchQuery, currentPage, totalPages, filterBy } = useSelector(selectProducts);
+  const [searchInput, setSearchInput] = useState('');
 
   useEffect(() => {
     dispatch(fetchProducts({ page: currentPage, query: searchQuery, filterBy }));
@@ -26,7 +27,11 @@ const ProductManagement: React.FC = () => {
   };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setSearchQuery(e.target.value));
+    setSearchInput(e.target.value);
+  };
+
+  const handleSearchSubmit = () => {
+    dispatch(setSearchQuery(searchInput));
   };
 
   const handleFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -37,7 +42,10 @@ const ProductManagement: React.FC = () => {
     <div>
       <h1>Product Management</h1>
       <button onClick={handleAddProduct}>Add Product</button>
-      <input type="text" value={searchQuery} onChange={handleSearch} placeholder="Search products..." />
+      <div>
+        <input type="text" value={searchInput} onChange={handleSearch} placeholder="Search products..." />
+        <button onClick={handleSearchSubmit}>Search</button>
+      </div>
       <select value={filterBy} onChange={handleFilter}>
         <option value="">All Categories</option>
         <option value="Category 1">Category 1</option>
@@ -68,4 +76,3 @@ const ProductManagement: React.FC = () => {
 };
 
 export default ProductManagement;
-
