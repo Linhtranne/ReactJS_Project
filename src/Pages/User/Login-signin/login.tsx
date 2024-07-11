@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-import '../../../../assets/css/login.css';
+import '../../../assets/css/login.css';
 import 'https://kit.fontawesome.com/b8ffcf0824.js';
-import logo from '../../../../assets/images/logo.png';
+import logo from '../../../assets/images/logo.png';
+import { login, signUp } from '../../../service/users/loginApi';
 
 const Login: React.FC = () => {
   const [isRightPanelActive, setIsRightPanelActive] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-
-  const adminEmail = "Linhtranne@gmail.com";
-  const adminPassword = "hihihihi";
+  const [name, setName] = useState<string>('');
 
   const handleSignUpClick = () => {
     setIsRightPanelActive(true);
@@ -19,19 +18,31 @@ const Login: React.FC = () => {
     setIsRightPanelActive(false);
   };
 
-  const handleLogin = (event: React.FormEvent) => {
+  const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (email === adminEmail && password === adminPassword) {
+    const response = await login(email, password);
+    if (response.success) {
       window.location.href = '/admin';
     } else {
-      alert("Invalid email or password");
+      alert(response.message);
+    }
+  };
+
+  const handleSignUp = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const response = await signUp(name, email, password);
+    if (response.success) {
+      alert('Sign up successful! Please log in.');
+      setIsRightPanelActive(false);
+    } else {
+      alert(response.message);
     }
   };
 
   return (
     <div className={`container ${isRightPanelActive ? 'right-panel-active' : ''}`} id="container">
       <div className="form-container sign-up-container">
-        <form action="#">
+        <form onSubmit={handleSignUp}>
           <h1>Đăng Kí</h1>
           <div className="social-container">
             <a href="#" className="social"><i className="fab fa-facebook-f"></i></a>
@@ -39,10 +50,10 @@ const Login: React.FC = () => {
             <a href="#" className="social"><i className="fab fa-linkedin-in"></i></a>
           </div>
           <span>hoặc sử dụng email của bạn để đăng kí</span>
-          <input type="text" placeholder="Name" />
-          <input type="email" placeholder="Email" />
-          <input type="password" placeholder="Password" />
-          <button>Đăng kí</button>
+          <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
+          <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <button type="submit">Đăng kí</button>
         </form>
       </div>
       <div className="form-container sign-in-container">
